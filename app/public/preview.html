@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Prévisualisation - Kiss Forms</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .preview-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .preview-banner-text {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .preview-banner-text svg {
+            width: 20px;
+            height: 20px;
+        }
+        .preview-banner-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .preview-banner .btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .preview-banner .btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .preview-banner .btn-close {
+            background: rgba(0,0,0,0.2);
+        }
+        body {
+            padding-top: 50px;
+        }
+        /* Désactiver les soumissions en preview */
+        .form-actions {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .form-actions::after {
+            content: "(Désactivé en prévisualisation)";
+            display: block;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+    </style>
+</head>
+<body>
+    <!-- Preview Banner -->
+    <div class="preview-banner">
+        <div class="preview-banner-text">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Mode prévisualisation (non enregistré)
+        </div>
+        <div class="preview-banner-actions">
+            <button class="btn" onclick="window.close()">Fermer</button>
+        </div>
+    </div>
+
+    <div class="container" id="form-container">
+        <!-- Loading -->
+        <div id="loading" class="empty-state">
+            <p>Chargement de la prévisualisation...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error-view" class="hidden">
+            <div class="message message-error">
+                <h3>Prévisualisation non disponible</h3>
+                <p id="error-message">Aucune donnée de formulaire à prévisualiser.</p>
+            </div>
+        </div>
+
+        <!-- Form Preview -->
+        <div id="form-view" class="hidden">
+            <header class="header">
+                <div class="logo">
+                    <img src="/images/logo.svg" alt="Studio Kiss" onerror="this.parentElement.textContent='KISS'">
+                </div>
+                <h1 class="title" id="form-title"></h1>
+                <p class="subtitle" id="form-description"></p>
+            </header>
+
+            <form id="questionnaire-form" class="form" onsubmit="return false;">
+                <div id="sections-container"></div>
+
+                <div class="form-actions" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" disabled>
+                        Sauvegarder le brouillon
+                    </button>
+                    <button type="submit" class="submit-button" disabled>
+                        Soumettre le formulaire
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    // Security: HTML escape function to prevent XSS
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        const str = String(text);
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return str.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // State
+    let formStructure = null;
+
+    // Load preview data from sessionStorage
+    function loadPreview() {
+        try {
+            const stored = sessionStorage.getItem('kiss_form_preview');
+            if (!stored) {
+                throw new Error('Aucune donnée');
+            }
+
+            formStructure = JSON.parse(stored);
+
+            if (!formStructure || !formStructure.sections) {
+                throw new Error('Structure invalide');
+            }
+
+            document.getElementById('form-title').textContent = formStructure.title || 'Sans titre';
+            document.getElementById('form-description').textContent = formStructure.description || '';
+
+            renderForm();
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('form-view').classList.remove('hidden');
+
+        } catch (error) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error-message').textContent = error.message || 'Erreur de chargement';
+            document.getElementById('error-view').classList.remove('hidden');
+        }
+    }
+
+    // Render form
+    function renderForm() {
+        const container = document.getElementById('sections-container');
+        container.innerHTML = '';
+
+        formStructure.sections.forEach(section => {
+            const sectionEl = document.createElement('div');
+            sectionEl.className = 'section';
+            sectionEl.innerHTML = `<h2 class="section-title">${escapeHtml(section.title)}</h2>`;
+
+            section.fields.forEach(field => {
+                const fieldEl = createFieldElement(field);
+                sectionEl.appendChild(fieldEl);
+            });
+
+            container.appendChild(sectionEl);
+        });
+
+        // Apply conditional visibility
+        updateConditionalFields();
+    }
+
+    // Create field element
+    function createFieldElement(field) {
+        const div = document.createElement('div');
+        div.className = 'field';
+
+        // Validate field.id format (security: prevent selector injection)
+        if (!field.id || !/^[a-zA-Z0-9_-]+$/.test(field.id)) {
+            div.innerHTML = '<p class="text-muted">Champ invalide</p>';
+            return div;
+        }
+
+        div.dataset.fieldId = field.id;
+
+        if (field.condition) {
+            div.classList.add('conditional');
+            div.dataset.conditionField = field.condition.field;
+            div.dataset.conditionValue = field.condition.value;
+        }
+
+        const labelClass = field.required ? 'field-label required' : 'field-label';
+        const safeId = escapeHtml(field.id);
+        const safeType = escapeHtml(field.type);
+
+        let inputHtml = '';
+
+        switch (field.type) {
+            case 'text':
+            case 'email':
+            case 'tel':
+            case 'date':
+                inputHtml = `
+                    <input
+                        type="${safeType}"
+                        id="${safeId}"
+                        name="${safeId}"
+                        class="field-input"
+                        ${field.required ? 'required' : ''}
+                    >
+                `;
+                break;
+
+            case 'textarea':
+                inputHtml = `
+                    <textarea
+                        id="${safeId}"
+                        name="${safeId}"
+                        class="field-textarea"
+                        ${field.required ? 'required' : ''}
+                    ></textarea>
+                `;
+                break;
+
+            case 'select':
+                inputHtml = `
+                    <select
+                        id="${safeId}"
+                        name="${safeId}"
+                        class="field-select"
+                        ${field.required ? 'required' : ''}
+                    >
+                        <option value="">Sélectionnez...</option>
+                        ${(field.options || []).map(opt => `
+                            <option value="${escapeHtml(opt)}">${escapeHtml(opt)}</option>
+                        `).join('')}
+                    </select>
+                `;
+                break;
+
+            case 'radio':
+                inputHtml = `
+                    <div class="field-options">
+                        ${(field.options || []).map(opt => `
+                            <div class="option">
+                                <input
+                                    type="radio"
+                                    id="${safeId}_${escapeHtml(opt)}"
+                                    name="${safeId}"
+                                    value="${escapeHtml(opt)}"
+                                    ${field.required ? 'required' : ''}
+                                >
+                                <label for="${safeId}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                break;
+
+            case 'checkbox':
+                const useChips = field.options && field.options.length > 6;
+                if (useChips) {
+                    inputHtml = `
+                        <div class="field-chips">
+                            ${(field.options || []).map(opt => `
+                                <div class="chip">
+                                    <input
+                                        type="checkbox"
+                                        id="${safeId}_${escapeHtml(opt)}"
+                                        name="${safeId}"
+                                        value="${escapeHtml(opt)}"
+                                    >
+                                    <label for="${safeId}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    inputHtml = `
+                        <div class="field-options">
+                            ${(field.options || []).map(opt => `
+                                <div class="option">
+                                    <input
+                                        type="checkbox"
+                                        id="${safeId}_${escapeHtml(opt)}"
+                                        name="${safeId}"
+                                        value="${escapeHtml(opt)}"
+                                    >
+                                    <label for="${safeId}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                break;
+        }
+
+        div.innerHTML = `
+            <label class="${labelClass}" for="${safeId}">${escapeHtml(field.label)}</label>
+            ${inputHtml}
+        `;
+
+        // Add change listener for conditional fields
+        const inputs = div.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('change', updateConditionalFields);
+        });
+
+        return div;
+    }
+
+    // Update conditional fields visibility
+    function updateConditionalFields() {
+        const formData = {};
+
+        // Collect current values
+        formStructure.sections.forEach(section => {
+            section.fields.forEach(field => {
+                // Validate field.id format (alphanumeric, dash, underscore only)
+                if (!field.id || !/^[a-zA-Z0-9_-]+$/.test(field.id)) return;
+
+                if (field.type === 'checkbox') {
+                    const checkboxes = document.querySelectorAll(`input[name="${field.id}"]:checked`);
+                    formData[field.id] = Array.from(checkboxes).map(cb => cb.value);
+                } else if (field.type === 'radio') {
+                    const checked = document.querySelector(`input[name="${field.id}"]:checked`);
+                    formData[field.id] = checked ? checked.value : '';
+                } else {
+                    const input = document.getElementById(field.id);
+                    if (input) {
+                        formData[field.id] = input.value;
+                    }
+                }
+            });
+        });
+
+        // Apply visibility
+        document.querySelectorAll('.field.conditional').forEach(field => {
+            const conditionField = field.dataset.conditionField;
+            const conditionValue = field.dataset.conditionValue;
+            let currentValue = formData[conditionField];
+
+            if (Array.isArray(currentValue)) {
+                field.classList.toggle('hidden', !currentValue.includes(conditionValue));
+            } else {
+                field.classList.toggle('hidden', currentValue !== conditionValue);
+            }
+        });
+    }
+
+    // Init
+    loadPreview();
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+
+# Environment files (contiennent des secrets!)
+.env
+.env.*
+!.env.example
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads (fichiers utilisateurs)
+app/public/uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+.next/
+
+# Coverage
+coverage/
+
+# Temp
+tmp/
+temp/
+
+# Infra & deploy (local only)
+.deploy-node/
+scripts/
+CONTEXT.json
+
+# Secrets locaux
+.secrets/
+
+# Claude
+.claude/

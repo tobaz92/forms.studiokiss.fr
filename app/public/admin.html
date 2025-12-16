@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin - Kiss Forms</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Login -->
+    <div id="login-view" class="login-container">
+        <h1 class="login-title">Kiss Forms</h1>
+        <div class="card">
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="password">Mot de passe</label>
+                    <input type="password" id="password" class="form-input" required autofocus>
+                </div>
+                <div id="login-error" class="message message-error hidden"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Connexion</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Layout -->
+    <div id="admin-view" class="admin-layout hidden">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <line x1="10" y1="9" x2="8" y2="9"/>
+                    </svg>
+                    <span>Kiss Forms</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Menu</span>
+                    <ul>
+                        <li>
+                            <a href="#dashboard" data-view="dashboard" class="active">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#forms" data-view="forms">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                                Formulaires
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#projects" data-view="projects">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                </svg>
+                                Projets
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Outils</span>
+                    <ul>
+                        <li>
+                            <a href="#backups" data-view="backups">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                </svg>
+                                Sauvegardes
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-logout" id="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Déconnexion
+                </button>
+            </div>
+        </aside>
+
+        <!-- Content -->
+        <main class="admin-content">
+            <!-- Dashboard -->
+            <div id="view-dashboard" class="view">
+                <div class="admin-header">
+                    <h1 class="admin-title">Dashboard</h1>
+                </div>
+                <div class="stats-grid" id="stats-grid"></div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Projets</h2>
+                            <button class="btn btn-sm btn-secondary" onclick="navigateTo('projects')">Voir tous</button>
+                        </div>
+                        <div id="dashboard-projects"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Formulaires</h2>
+                            <button class="btn btn-sm btn-secondary" onclick="navigateTo('forms')">Voir tous</button>
+                        </div>
+                        <div id="dashboard-forms"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Soumissions récentes</h2>
+                    </div>
+                    <div id="recent-submissions"></div>
+                </div>
+            </div>
+
+            <!-- Projects -->
+            <div id="view-projects" class="view hidden">
+                <div class="admin-header">
+                    <h1 class="admin-title">Projets</h1>
+                    <button class="btn btn-primary" onclick="openProjectModal()">+ Nouveau projet</button>
+                </div>
+                <div class="card">
+                    <div id="projects-list"></div>
+                </div>
+            </div>
+
+            <!-- Forms -->
+            <div id="view-forms" class="view hidden">
+                <div class="admin-header">
+                    <h1 class="admin-title">Formulaires</h1>
+                    <button class="btn btn-primary" onclick="openFormModal()">+ Nouveau formulaire</button>
+                </div>
+                <div class="card">
+                    <div id="forms-list"></div>
+                </div>
+            </div>
+
+            <!-- Form Editor -->
+            <div id="view-form-editor" class="view hidden">
+                <div class="admin-header">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <h1 class="admin-title" id="editor-title">Éditeur de formulaire</h1>
+                        <span id="form-status-badge" class="badge"></span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="previewForm()" title="Voir les modifications en cours">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="vertical-align: middle; margin-right: 4px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            Prévisualiser
+                        </button>
+                        <button class="btn btn-secondary" id="btn-client-link" onclick="previewSavedForm()" title="Voir la version enregistrée (lien client)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="vertical-align: middle; margin-right: 4px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Lien client
+                        </button>
+                        <button class="btn btn-secondary" onclick="saveForm('draft')" title="Enregistrer sans publier">
+                            Brouillon
+                        </button>
+                        <button class="btn btn-primary" onclick="saveForm('active')" title="Enregistrer et rendre accessible">
+                            Publier
+                        </button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="form-label">Titre du formulaire</label>
+                        <input type="text" id="form-title-input" class="form-input" placeholder="Titre du formulaire">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Sections</h2>
+                        <button class="btn btn-sm btn-secondary" onclick="addSection()">+ Section</button>
+                    </div>
+                    <div id="editor-sections"></div>
+                </div>
+            </div>
+
+            <!-- Submissions (accessed via project) -->
+            <div id="view-submissions" class="view hidden">
+                <div class="admin-header">
+                    <h1 class="admin-title" id="submissions-title">Soumissions</h1>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <select id="submissions-status-filter" class="form-select" style="width: auto;" onchange="filterSubmissions()">
+                            <option value="submitted">Soumis</option>
+                            <option value="all">Tous les statuts</option>
+                            <option value="draft">Brouillons</option>
+                            <option value="validated">Validés</option>
+                            <option value="archived">Archivés</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="navigateTo('projects')">Retour aux projets</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div id="submissions-list"></div>
+                </div>
+            </div>
+
+            <!-- Submission Detail -->
+            <div id="view-submission-detail" class="view hidden">
+                <div class="admin-header">
+                    <h1 class="admin-title">Détail de la soumission</h1>
+                    <button class="btn btn-secondary" onclick="goBackToSubmissions()">Retour</button>
+                </div>
+                <div class="card" id="submission-detail-content"></div>
+            </div>
+
+            <!-- Backups -->
+            <div id="view-backups" class="view hidden">
+                <div class="admin-header">
+                    <h1 class="admin-title">Sauvegardes</h1>
+                    <button class="btn btn-primary" onclick="createBackup(event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Nouveau backup
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Backups disponibles</h2>
+                        <span class="backup-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            Backup auto : chaque dimanche à 3h
+                        </span>
+                    </div>
+                    <div id="backups-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Project -->
+    <div class="modal-overlay" id="modal-project">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-project-title">Nouveau projet</h3>
+                <button class="modal-close" onclick="closeModal('modal-project')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Nom du projet</label>
+                    <input type="text" id="project-name-input" class="form-input" placeholder="Nom du projet">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Logo du client</label>
+                    <p style="font-size: 13px; color: var(--gray-500); margin-bottom: 12px;">Si aucun logo, le nom du projet sera affiché</p>
+                    <div id="logo-preview-container" class="logo-preview-container" style="display: none;">
+                        <img id="logo-preview" src="" alt="Logo">
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeLogo()">Supprimer</button>
+                    </div>
+                    <div id="logo-upload-container" class="logo-buttons">
+                        <input type="file" id="logo-input" accept="image/*" onchange="previewLogo(this)" style="display: none;">
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('logo-input').click()">
+                            Uploader un logo
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="openMediaLibrary()">
+                            Médiathèque
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Style visuel</label>
+                    <div class="style-selector">
+                        <label class="style-option">
+                            <input type="radio" name="project-style" value="google" checked>
+                            <div class="style-preview style-preview-google">
+                                <span class="style-name">Google</span>
+                                <span class="style-desc">Material Design, moderne</span>
+                            </div>
+                        </label>
+                        <label class="style-option">
+                            <input type="radio" name="project-style" value="code">
+                            <div class="style-preview style-preview-code">
+                                <span class="style-name">Code</span>
+                                <span class="style-desc">Minimaliste, monospace</span>
+                            </div>
+                        </label>
+                        <label class="style-option">
+                            <input type="radio" name="project-style" value="editorial">
+                            <div class="style-preview style-preview-editorial">
+                                <span class="style-name">Editorial</span>
+                                <span class="style-desc">Print, typographique</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Formulaires du projet</label>
+                    <p style="font-size: 13px; color: var(--gray-500); margin-bottom: 12px;">Sélectionnez les formulaires à inclure, puis glissez-déposez pour les réordonner</p>
+                    <div id="project-forms-available" class="checkbox-list" style="margin-bottom: 16px;"></div>
+                    <div id="project-forms-list" class="sortable-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-project')">Annuler</button>
+                <button class="btn btn-primary" onclick="saveProject()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Médiathèque -->
+    <div class="modal-overlay" id="modal-media">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Médiathèque</h3>
+                <button class="modal-close" onclick="closeModal('modal-media')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="media-upload-zone" id="media-upload-zone">
+                    <input type="file" id="media-file-input" accept="image/*" onchange="uploadMedia(this)" style="display: none;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('media-file-input').click()">
+                        + Ajouter une image
+                    </button>
+                </div>
+                <div id="media-grid" class="media-grid">
+                    <!-- Images chargées dynamiquement -->
+                </div>
+                <div id="media-empty" class="empty-state" style="display: none;">
+                    <p>Aucune image dans la médiathèque</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="modal-form">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Nouveau formulaire</h3>
+                <button class="modal-close" onclick="closeModal('modal-form')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Titre</label>
+                    <input type="text" id="new-form-title" class="form-input" placeholder="Titre du formulaire">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Template</label>
+                    <select id="new-form-template" class="form-select">
+                        <option value="">Formulaire vide</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-form')">Annuler</button>
+                <button class="btn btn-primary" onclick="createForm()">Créer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Field -->
+    <div class="modal-overlay" id="modal-field">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-field-title">Ajouter un champ</h3>
+                <button class="modal-close" onclick="closeModal('modal-field')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Label</label>
+                    <input type="text" id="field-label-input" class="form-input" placeholder="Question ou label">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select id="field-type-select" class="form-select" onchange="toggleFieldOptions()">
+                        <option value="text">Texte court</option>
+                        <option value="email">Email</option>
+                        <option value="tel">Téléphone</option>
+                        <option value="textarea">Texte long</option>
+                        <option value="date">Date</option>
+                        <option value="select">Liste déroulante</option>
+                        <option value="radio">Choix unique (radio)</option>
+                        <option value="checkbox">Choix multiples (checkbox)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="field-options-group" style="display: none;">
+                    <label class="form-label">Options (une par ligne)</label>
+                    <textarea id="field-options-input" class="form-textarea" rows="4" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" id="field-required-input"> Champ obligatoire
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Condition (optionnel)</label>
+                    <select id="field-condition-field" class="form-select">
+                        <option value="">Toujours visible</option>
+                    </select>
+                </div>
+                <div class="form-group" id="field-condition-value-group" style="display: none;">
+                    <label class="form-label">Afficher si la valeur est</label>
+                    <input type="text" id="field-condition-value" class="form-input" placeholder="Valeur attendue">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-field')">Annuler</button>
+                <button class="btn btn-primary" onclick="saveField()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Section -->
+    <div class="modal-overlay" id="modal-section">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-section-title">Nouvelle section</h3>
+                <button class="modal-close" onclick="closeModal('modal-section')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Titre de la section</label>
+                    <input type="text" id="section-title-input" class="form-input" placeholder="Titre de la section">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-section')">Annuler</button>
+                <button class="btn btn-primary" onclick="saveSection()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmation</h3>
+                <button class="modal-close" onclick="closeModal('modal-confirm')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Êtes-vous sûr ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-confirm')">Annuler</button>
+                <button class="btn btn-danger" id="confirm-btn">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin.bundle.js"></script>
+</body>
+</html>

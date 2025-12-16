@@ -1,0 +1,16 @@
+{
+  "name": "kiss-forms",
+  "version": "1.0.0",
+  "description": "Formulaires web avec admin, sauvegarde brouillon, export PDF/JPG",
+  "author": "Studio Kiss",
+  "license": "MIT",
+  "keywords": ["forms", "questionnaire", "express", "sqlite", "pdf", "admin"],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "cd app && NODE_ENV=development node --watch server.js",
+    "start": "cd app && NODE_ENV=production node server.js",
+    "test": "cd app && npx jest"
+  }
+}

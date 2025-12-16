@@ -1,0 +1,20 @@
+// État global mutable — importé par tous les modules
+export const state = {
+    token: localStorage.getItem('kiss_admin_token'),
+    currentFormId: null,
+    currentFormStructure: { title: '', description: 'Studio Kiss', sections: [] },
+    editingFieldIndex: null,
+    editingSectionIndex: null,
+    projects: [],
+    forms: [],
+    templates: [],
+    currentSubmissionFilter: 'submitted',
+    currentProjectLogo: null,
+    pendingLogoFile: null,
+    mediaLibrary: [],
+    currentFormStatus: 'draft',
+    currentProjectId: null,
+    projectSubmissionsData: [],
+    draggedSection: null,
+    draggedField: null,
+};

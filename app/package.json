@@ -1,0 +1,41 @@
+{
+  "name": "kiss-forms-v2",
+  "version": "2.0.0",
+  "description": "Système de gestion de formulaires multi-services - Studio Kiss",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node --watch server.js",
+    "build": "node esbuild.config.js",
+    "build:watch": "node esbuild.config.js --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "author": "Studio Kiss",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "better-sqlite3": "^11.6.0",
+    "canvas": "^2.11.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "file-type": "^16.5.4",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "nanoid": "^5.0.8",
+    "node-cron": "^4.2.1",
+    "pdfkit": "^0.17.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "babel-jest": "^30.2.0",
+    "esbuild": "^0.28.0",
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4"
+  }
+}

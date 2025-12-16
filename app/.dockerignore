@@ -1,0 +1,29 @@
+# Ne pas copier dans l'image Docker
+node_modules
+npm-debug.log
+
+# Base de données locale - NE PAS écraser la prod!
+data/*.db
+data/forms.db
+
+# Tests
+tests
+*.test.js
+coverage
+.nyc_output
+
+# Dev files
+.git
+.gitignore
+.env
+.env.*
+*.md
+CONTEXT.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log

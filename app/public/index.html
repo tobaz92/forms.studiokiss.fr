@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Questionnaire - Studio Kiss</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container" id="form-container">
+        <!-- Loading -->
+        <div id="loading" class="empty-state">
+            <p>Chargement du formulaire...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error-view" class="hidden">
+            <div class="message message-error">
+                <h3>Formulaire non disponible</h3>
+                <p id="error-message">Ce formulaire n'existe pas ou n'est plus disponible.</p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div id="form-view" class="hidden">
+            <header class="header">
+                <div class="logo">
+                    <img src="/images/logo.svg" alt="Studio Kiss" onerror="this.parentElement.textContent='KISS'">
+                </div>
+                <h1 class="title" id="form-title"></h1>
+                <p class="subtitle" id="form-description"></p>
+            </header>
+
+            <form id="questionnaire-form" class="form">
+                <div id="sections-container"></div>
+
+                <div id="submission-warning" class="message message-warning hidden">
+                    Ce formulaire a déjà été soumis. Si vous le modifiez et le soumettez à nouveau, Studio Kiss sera notifié de vos modifications.
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+                    <button type="button" class="btn btn-secondary" id="save-draft-btn">
+                        Sauvegarder le brouillon
+                    </button>
+                    <button type="submit" class="submit-button" id="submit-btn">
+                        Soumettre le formulaire
+                    </button>
+                </div>
+
+                <div id="auto-save-message" class="auto-save-message"></div>
+            </form>
+        </div>
+
+        <!-- Success -->
+        <div id="success-view" class="hidden">
+            <div class="success-message">
+                <h3>Merci !</h3>
+                <p id="success-message">Votre formulaire a bien été soumis.</p>
+                <p style="margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="location.reload()">Modifier mes réponses</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-trust">
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Auto-hébergé</strong>
+                        Serveurs en France, aucun cloud externe
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Données protégées</strong>
+                        Supprimées après validation du projet
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Open source</strong>
+                        Transparence et code accessible
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Fait avec soin</strong>
+                        Par des humains, pour des humains
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <div class="footer-brand">
+                    <a href="https://studiokiss.fr" target="_blank" class="footer-logo">
+                        <img src="/images/logo-small.svg" alt="Studio Kiss">
+                        <span class="footer-baseline">Keep it Strictly Simple</span>
+                    </a>
+                </div>
+                <div class="footer-credits">
+                    <a href="https://tomi.fr" target="_blank">Tomi Bequet<small>dev</small></a>
+                    <a href="https://www.anaispingeot.com" target="_blank">Anaïs Pingeot<small>design</small></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Questionnaires - Studio Kiss</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container" id="project-container">
+        <!-- Loading -->
+        <div id="loading" class="empty-state">
+            <p>Chargement du projet...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="error-view" class="hidden">
+            <div class="message message-error">
+                <h3>Projet non disponible</h3>
+                <p id="error-message">Ce projet n'existe pas ou n'est plus disponible.</p>
+            </div>
+        </div>
+
+        <!-- Project View -->
+        <div id="project-view" class="hidden">
+            <header class="header project-header">
+                <div class="client-logo" id="client-logo">
+                    <!-- Logo du client ou nom du projet - géré par JS -->
+                </div>
+                <p class="subtitle">Questionnaires à compléter</p>
+            </header>
+
+            <!-- Navigation -->
+            <div class="step-nav-container">
+                <nav class="step-nav" id="project-nav"></nav>
+                <div class="step-current" id="step-current">
+                    <div class="step-current-label">Étape <span id="step-number">1</span> sur <span id="step-total">3</span></div>
+                    <div class="step-current-title" id="step-title"></div>
+                </div>
+            </div>
+
+            <!-- Panels Container -->
+            <div id="panels-container"></div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" id="prev-btn" onclick="prevPanel()">Précédent</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextPanel()">Suivant</button>
+            </div>
+
+            <!-- Auto-save message -->
+            <div id="auto-save-message" class="auto-save-message"></div>
+        </div>
+
+        <!-- Success -->
+        <div id="success-view" class="hidden">
+            <div class="success-message">
+                <h3>Merci !</h3>
+                <p>Tous vos questionnaires ont été soumis avec succès.</p>
+                <p style="margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="location.reload()">Modifier mes réponses</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-trust">
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Auto-hébergé</strong>
+                        Serveurs en France, aucun cloud externe
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Données protégées</strong>
+                        Supprimées après validation du projet
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Open source</strong>
+                        Transparence et code accessible
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div class="trust-text">
+                        <strong>Fait avec soin</strong>
+                        Par des humains, pour des humains
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-bottom">
+                <div class="footer-brand">
+                    <a href="https://studiokiss.fr" target="_blank" class="footer-logo">
+                        <img src="/images/logo-small.svg" alt="Studio Kiss">
+                        <span class="footer-baseline">Keep it Strictly Simple</span>
+                    </a>
+                </div>
+                <div class="footer-credits">
+                    <a href="https://tomi.fr" target="_blank">Tomi Bequet<small>dev</small></a>
+                    <a href="https://www.anaispingeot.com" target="_blank">Anaïs Pingeot<small>design</small></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Security: HTML escape function to prevent XSS
+        function escapeHtml(text) {
+            if (text === null || text === undefined) return '';
+            const str = String(text);
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return str.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // State
+        let project = null;
+        let sharedData = {};
+        let formsData = {};
+        let currentPanelIndex = 0;
+        let panels = []; // { type: 'shared' | 'form', id, title, structure }
+        const slug = window.location.pathname.split('/p/')[1];
+        const STORAGE_KEY = `kiss_project_${slug}`;
+
+        // Load project
+        async function loadProject() {
+            try {
+                const res = await fetch(`/api/project/${slug}`);
+                if (!res.ok) throw new Error('Projet non trouvé');
+
+                project = await res.json();
+
+                // Load style based on project style
+                loadProjectStyle(project.style || 'google');
+
+                // Load saved data from localStorage
+                loadFromStorage();
+
+                // Build panels
+                buildPanels();
+
+                // Render
+                renderProject();
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('project-view').classList.remove('hidden');
+
+            } catch (error) {
+                // Rediriger vers une 404 générique (ne révèle rien sur l'application)
+                window.location.href = '/404';
+            }
+        }
+
+        function loadProjectStyle(style) {
+            // Remove any existing project style
+            const existingStyle = document.getElementById('project-style');
+            if (existingStyle) existingStyle.remove();
+
+            // Load new style if not google (default)
+            if (style && style !== 'google') {
+                const link = document.createElement('link');
+                link.id = 'project-style';
+                link.rel = 'stylesheet';
+                link.href = `/css/style-${style}.css`;
+                document.head.appendChild(link);
+            }
+
+            // Add body class for style
+            document.body.className = `theme-${style || 'google'}`;
+        }
+
+        function loadFromStorage() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    sharedData = parsed.sharedData || {};
+                    formsData = parsed.formsData || {};
+                } catch (e) {}
+            }
+
+            // Also load from server if available
+            if (project.shared_data) {
+                sharedData = { ...project.shared_data, ...sharedData };
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                sharedData,
+                formsData,
+                savedAt: new Date().toISOString()
+            }));
+            showAutoSaveMessage('Sauvegardé');
+        }
+
+        function buildPanels() {
+            panels = [];
+
+            // Add shared section panel if defined
+            if (project.shared_sections && project.shared_sections.length > 0) {
+                panels.push({
+                    type: 'shared',
+                    id: 'shared',
+                    title: 'Vos informations',
+                    sections: project.shared_sections
+                });
+
+                // Add all form panels
+                project.forms.forEach(form => {
+                    panels.push({
+                        type: 'form',
+                        id: form.id,
+                        slug: form.slug,
+                        title: form.title,
+                        submission_status: form.submission_status
+                    });
+                });
+            } else if (project.forms.length > 0) {
+                // No shared_sections defined - use first form as shared panel if it's a contact/info form
+                // Otherwise use default contact section
+                const firstForm = project.forms[0];
+                const isContactForm = firstForm.title.toLowerCase().includes('information') ||
+                                     firstForm.title.toLowerCase().includes('contact') ||
+                                     firstForm.title.toLowerCase().includes('vos info');
+
+                if (isContactForm) {
+                    // Use first form as shared panel, skip it in forms list
+                    panels.push({
+                        type: 'form',
+                        id: firstForm.id,
+                        slug: firstForm.slug,
+                        title: firstForm.title,
+                        submission_status: firstForm.submission_status
+                    });
+
+                    // Add remaining forms
+                    project.forms.slice(1).forEach(form => {
+                        panels.push({
+                            type: 'form',
+                            id: form.id,
+                            slug: form.slug,
+                            title: form.title,
+                            submission_status: form.submission_status
+                        });
+                    });
+                } else {
+                    // Default contact section + all forms
+                    panels.push({
+                        type: 'shared',
+                        id: 'shared',
+                        title: 'Vos informations',
+                        sections: [{
+                            id: 'contact',
+                            title: 'CONTACT',
+                            fields: [
+                                { id: 'votre_nom', label: 'Votre nom', type: 'text', required: true },
+                                { id: 'votre_email', label: 'Votre email', type: 'email', required: true },
+                                { id: 'votre_telephone', label: 'Votre téléphone', type: 'tel', required: false },
+                                { id: 'nom_entreprise', label: 'Nom de l\'entreprise / projet', type: 'text', required: false }
+                            ]
+                        }]
+                    });
+
+                    project.forms.forEach(form => {
+                        panels.push({
+                            type: 'form',
+                            id: form.id,
+                            slug: form.slug,
+                            title: form.title,
+                            submission_status: form.submission_status
+                        });
+                    });
+                }
+            } else {
+                // No forms - just show default contact section
+                panels.push({
+                    type: 'shared',
+                    id: 'shared',
+                    title: 'Vos informations',
+                    sections: [{
+                        id: 'contact',
+                        title: 'CONTACT',
+                        fields: [
+                            { id: 'votre_nom', label: 'Votre nom', type: 'text', required: true },
+                            { id: 'votre_email', label: 'Votre email', type: 'email', required: true },
+                            { id: 'votre_telephone', label: 'Votre téléphone', type: 'tel', required: false },
+                            { id: 'nom_entreprise', label: 'Nom de l\'entreprise / projet', type: 'text', required: false }
+                        ]
+                    }]
+                });
+            }
+        }
+
+        function renderProject() {
+            // Afficher le logo du client ou le nom du projet
+            const clientLogoContainer = document.getElementById('client-logo');
+            if (project.logo) {
+                clientLogoContainer.innerHTML = `<img src="${escapeHtml(project.logo)}" alt="${escapeHtml(project.name)}" class="client-logo-img">`;
+            } else {
+                clientLogoContainer.innerHTML = `<h1 class="title">${escapeHtml(project.name)}</h1>`;
+            }
+
+            // Render navigation
+            renderStepNav();
+
+            // Render panels
+            renderPanels();
+
+            // Update buttons
+            updateNavButtons();
+        }
+
+        function renderStepNav() {
+            const nav = document.getElementById('project-nav');
+            let html = '';
+
+            panels.forEach((panel, i) => {
+                // Add step item
+                html += `
+                    <div class="step-nav-item ${i === currentPanelIndex ? 'active' : ''} ${i < currentPanelIndex ? 'completed' : ''}" onclick="goToPanel(${parseInt(i)})">
+                        <div class="step-dot"><span>${parseInt(i) + 1}</span></div>
+                        <div class="step-tooltip">${escapeHtml(panel.title)}</div>
+                    </div>
+                `;
+                // Add line between steps (except after last)
+                if (i < panels.length - 1) {
+                    html += `<div class="step-line ${i < currentPanelIndex ? 'completed' : ''}"></div>`;
+                }
+            });
+
+            nav.innerHTML = html;
+
+            // Update current step info
+            document.getElementById('step-number').textContent = currentPanelIndex + 1;
+            document.getElementById('step-total').textContent = panels.length;
+            document.getElementById('step-title').textContent = panels[currentPanelIndex].title;
+        }
+
+        async function renderPanels() {
+            const container = document.getElementById('panels-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < panels.length; i++) {
+                const panel = panels[i];
+                const div = document.createElement('div');
+                div.className = `form-panel ${i === currentPanelIndex ? 'active' : ''}`;
+                div.id = `panel-${i}`;
+
+                if (panel.type === 'shared') {
+                    div.innerHTML = renderSharedPanel(panel);
+                } else {
+                    // Load form structure if not loaded
+                    if (!panel.structure) {
+                        const formRes = await fetch(`/api/form/${panel.slug}`);
+                        const formData = await formRes.json();
+                        panel.structure = formData.structure;
+                    }
+                    div.innerHTML = renderFormPanel(panel);
+                }
+
+                container.appendChild(div);
+            }
+
+            // Add event listeners
+            container.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('change', handleInputChange);
+                input.addEventListener('input', debounce(saveToStorage, 1000));
+            });
+        }
+
+        function renderSharedPanel(panel) {
+            let html = `<h2 class="section-title">${escapeHtml(panel.title)}</h2>`;
+
+            panel.sections.forEach(section => {
+                html += `<div class="section"><h3 class="section-title">${escapeHtml(section.title)}</h3>`;
+                section.fields.forEach(field => {
+                    html += renderField(field, sharedData[field.id], 'shared');
+                });
+                html += '</div>';
+            });
+
+            return html;
+        }
+
+        function renderFormPanel(panel) {
+            const data = formsData[panel.id] || {};
+            let html = '';
+
+            panel.structure.sections.forEach(section => {
+                html += `<div class="section"><h2 class="section-title">${escapeHtml(section.title)}</h2>`;
+                section.fields.forEach(field => {
+                    html += renderField(field, data[field.id], `form-${parseInt(panel.id)}`);
+                });
+                html += '</div>';
+            });
+
+            return html;
+        }
+
+        function renderField(field, value, prefix) {
+            const safeId = escapeHtml(field.id);
+            const id = `${escapeHtml(prefix)}_${safeId}`;
+            const labelClass = field.required ? 'field-label required' : 'field-label';
+            const safeType = escapeHtml(field.type);
+            const safeValue = escapeHtml(value || '');
+            let inputHtml = '';
+
+            switch (field.type) {
+                case 'text':
+                case 'email':
+                case 'tel':
+                case 'date':
+                    inputHtml = `<input type="${safeType}" id="${id}" name="${id}" class="field-input" value="${safeValue}" ${field.required ? 'required' : ''}>`;
+                    break;
+                case 'textarea':
+                    inputHtml = `<textarea id="${id}" name="${id}" class="field-textarea" ${field.required ? 'required' : ''}>${safeValue}</textarea>`;
+                    break;
+                case 'select':
+                    inputHtml = `<select id="${id}" name="${id}" class="field-select" ${field.required ? 'required' : ''}>
+                        <option value="">Sélectionnez...</option>
+                        ${(field.options || []).map(opt => `<option value="${escapeHtml(opt)}" ${value === opt ? 'selected' : ''}>${escapeHtml(opt)}</option>`).join('')}
+                    </select>`;
+                    break;
+                case 'radio':
+                    inputHtml = `<div class="field-options">
+                        ${(field.options || []).map(opt => `
+                            <div class="option">
+                                <input type="radio" id="${id}_${escapeHtml(opt)}" name="${id}" value="${escapeHtml(opt)}" ${value === opt ? 'checked' : ''} ${field.required ? 'required' : ''}>
+                                <label for="${id}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                    break;
+                case 'checkbox':
+                    const checkedValues = Array.isArray(value) ? value : [];
+                    // Use chips style for fields with more than 6 options
+                    const useChips = field.options && field.options.length > 6;
+                    if (useChips) {
+                        inputHtml = `<div class="field-chips">
+                            ${(field.options || []).map(opt => `
+                                <div class="chip">
+                                    <input type="checkbox" id="${id}_${escapeHtml(opt)}" name="${id}" value="${escapeHtml(opt)}" ${checkedValues.includes(opt) ? 'checked' : ''}>
+                                    <label for="${id}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                                </div>
+                            `).join('')}
+                        </div>`;
+                    } else {
+                        inputHtml = `<div class="field-options">
+                            ${(field.options || []).map(opt => `
+                                <div class="option">
+                                    <input type="checkbox" id="${id}_${escapeHtml(opt)}" name="${id}" value="${escapeHtml(opt)}" ${checkedValues.includes(opt) ? 'checked' : ''}>
+                                    <label for="${id}_${escapeHtml(opt)}">${escapeHtml(opt)}</label>
+                                </div>
+                            `).join('')}
+                        </div>`;
+                    }
+                    break;
+            }
+
+            return `<div class="field" data-field-id="${safeId}">
+                <label class="${labelClass}">${escapeHtml(field.label)}</label>
+                ${inputHtml}
+            </div>`;
+        }
+
+        function handleInputChange(e) {
+            const name = e.target.name;
+            const [prefix, ...rest] = name.split('_');
+            const fieldId = rest.join('_');
+
+            let value;
+            if (e.target.type === 'checkbox') {
+                const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+                value = Array.from(checkboxes).map(cb => cb.value);
+            } else if (e.target.type === 'radio') {
+                const checked = document.querySelector(`input[name="${name}"]:checked`);
+                value = checked ? checked.value : '';
+            } else {
+                value = e.target.value;
+            }
+
+            if (prefix === 'shared') {
+                sharedData[fieldId] = value;
+            } else {
+                const formId = prefix.replace('form-', '');
+                if (!formsData[formId]) formsData[formId] = {};
+                formsData[formId][fieldId] = value;
+            }
+        }
+
+        function goToPanel(index) {
+            currentPanelIndex = index;
+
+            // Re-render step navigation
+            renderStepNav();
+
+            // Update panels
+            document.querySelectorAll('.form-panel').forEach((panel, i) => {
+                panel.classList.toggle('active', i === index);
+            });
+
+            updateNavButtons();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevPanel() {
+            if (currentPanelIndex > 0) {
+                goToPanel(currentPanelIndex - 1);
+            }
+        }
+
+        async function nextPanel() {
+            // Validate current panel
+            const currentPanel = document.getElementById(`panel-${currentPanelIndex}`);
+            const inputs = currentPanel.querySelectorAll('input[required], textarea[required], select[required]');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.value) {
+                    valid = false;
+                    input.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+
+            if (!valid) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+
+            // Save shared data to server
+            if (panels[currentPanelIndex].type === 'shared') {
+                await fetch(`/api/project/${slug}/shared-data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: sharedData })
+                });
+            }
+
+            // Save form data to server
+            if (panels[currentPanelIndex].type === 'form') {
+                const panel = panels[currentPanelIndex];
+                await fetch(`/api/form/${panel.slug}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        data: formsData[panel.id] || {},
+                        action: currentPanelIndex === panels.length - 1 ? 'submit' : 'save'
+                    })
+                });
+            }
+
+            if (currentPanelIndex < panels.length - 1) {
+                goToPanel(currentPanelIndex + 1);
+            } else {
+                // All done - submit all
+                await submitAll();
+            }
+        }
+
+        async function submitAll() {
+            // Submit all forms
+            for (const panel of panels) {
+                if (panel.type === 'form') {
+                    await fetch(`/api/form/${panel.slug}/submit`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            data: formsData[panel.id] || {},
+                            action: 'submit'
+                        })
+                    });
+                }
+            }
+
+            document.getElementById('project-view').classList.add('hidden');
+            document.getElementById('success-view').classList.remove('hidden');
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            prevBtn.style.visibility = currentPanelIndex === 0 ? 'hidden' : 'visible';
+            nextBtn.textContent = currentPanelIndex === panels.length - 1 ? 'Soumettre tout' : 'Suivant';
+        }
+
+        function showAutoSaveMessage(message) {
+            const el = document.getElementById('auto-save-message');
+            el.textContent = message;
+            el.style.opacity = '1';
+            setTimeout(() => { el.style.opacity = '0'; }, 2000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Init
+        loadProject();
+    </script>
+</body>
+</html>
